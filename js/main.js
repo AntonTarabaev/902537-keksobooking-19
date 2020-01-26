@@ -95,7 +95,6 @@ var PIN_SIZE = {
 var map = document.querySelector('.map');
 var mapPinsArea = map.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var offersArr = [];
 
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -154,11 +153,15 @@ var createOffer = function (number) {
   return createdOffer;
 };
 
-for (var i = 0; i < TOTAL_OFFERS; i++) {
-  offersArr[i] = createOffer(i);
-}
+var generateOffers = function (totalOffers) {
+  var offersArr = [];
 
-map.classList.remove('map--faded');
+  for (var i = 0; i < totalOffers; i++) {
+    offersArr[i] = createOffer(i);
+  }
+
+  return offersArr;
+};
 
 var renderPin = function (pinInfo) {
   var pinElement = pinTemplate.cloneNode(true);
@@ -181,4 +184,7 @@ var renderPins = function (pinsInfo) {
   return fragment;
 };
 
+map.classList.remove('map--faded');
+
+var offersArr = generateOffers(TOTAL_OFFERS);
 mapPinsArea.appendChild(renderPins(offersArr));
