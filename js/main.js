@@ -1,90 +1,88 @@
 'use strict';
 
 var TOTAL_OFFERS = 8;
-var OFFERS_OPTIONS = {
-  TITLES: [
-    'Квартира в глуши',
-    'Дворец',
-    'Большой дом',
-    'Замок на холме',
-    'Бунгало у моря',
-    'Пристройка',
-    'Маленький домик',
-    'Бункер'
-  ],
-  PRICES: [
-    500,
-    1000000,
-    7000,
-    2000000,
-    1000,
-    50,
-    1000,
-    500000
-  ],
-  TYPES: [
-    'palace',
-    'flat',
-    'house',
-    'bungalo'
-  ],
-  ROOMS: [
-    3,
-    100,
-    10,
-    250,
-    1,
-    2,
-    5,
-    73
-  ],
-  GUESTS: [
-    3,
-    100,
-    10,
-    200,
-    1,
-    2,
-    5,
-    50
-  ],
-  CHECKS: [
-    '12:00',
-    '13:00',
-    '14:00'
-  ],
-  FEATURES: [
-    'wifi',
-    'dishwasher',
-    'parking',
-    'washer',
-    'elevator',
-    'conditioner'
-  ],
-  DESCRIPTIONS: [
-    'Плохая квартира',
-    'Маленький дворец',
-    'Хороший дом',
-    'Высокий замок',
-    'Уютное бунгало',
-    'Великолепная пристройка',
-    'Красивый домик',
-    'Безопасный бункер'
-  ],
-  PHOTOS: [
-    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-  ],
-  LOCATION: {
-    X: {
-      MIN: 70,
-      MAX: 1070,
-    },
-    Y: {
-      MIN: 130,
-      MAX: 630
-    }
+var OFFERS_TITLES = [
+  'Квартира в глуши',
+  'Дворец',
+  'Большой дом',
+  'Замок на холме',
+  'Бунгало у моря',
+  'Пристройка',
+  'Маленький домик',
+  'Бункер'
+];
+var OFFERS_PRICES = [
+  500,
+  1000000,
+  7000,
+  2000000,
+  1000,
+  50,
+  1000,
+  500000
+];
+var OFFERS_TYPES = [
+  'palace',
+  'flat',
+  'house',
+  'bungalo'
+];
+var ROOMS_COUNT = [
+  3,
+  100,
+  10,
+  250,
+  1,
+  2,
+  5,
+  73
+];
+var GUESTS_COUNT = [
+  3,
+  100,
+  10,
+  200,
+  1,
+  2,
+  5,
+  50
+];
+var OFFERS_CHECKS = [
+  '12:00',
+  '13:00',
+  '14:00'
+];
+var OFFERS_FEATURES = [
+  'wifi',
+  'dishwasher',
+  'parking',
+  'washer',
+  'elevator',
+  'conditioner'
+];
+var OFFERS_DESCRIPTIONS = [
+  'Плохая квартира',
+  'Маленький дворец',
+  'Хороший дом',
+  'Высокий замок',
+  'Уютное бунгало',
+  'Великолепная пристройка',
+  'Красивый домик',
+  'Безопасный бункер'
+];
+var OFFERS_PHOTOS = [
+  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+];
+var OFFERS_LOCATIONS = {
+  X: {
+    MIN: 70,
+    MAX: 1070,
+  },
+  Y: {
+    MIN: 130,
+    MAX: 630
   }
 };
 var PIN_SIZE = {
@@ -101,48 +99,36 @@ var getRandomInt = function (min, max) {
 };
 
 var shuffleArr = function (arr) {
-  var arrCopy = arr.slice();
-  var rand;
-  var temp;
-
-  for (var i = arrCopy.length - 1; i > 0; i--) {
-    rand = getRandomInt(0, i);
-    temp = arrCopy[rand];
-    arrCopy[rand] = arrCopy[i];
-    arrCopy[i] = temp;
-  }
-
-  return arrCopy;
+  return arr.sort(function () {
+    return Math.random() - 0.5;
+  });
 };
 
 var cutArrRandomly = function (arr) {
-  var arrCopy = arr.slice();
-  var randomLength = getRandomInt(1, arrCopy.length);
-
-  return arrCopy.slice(0, randomLength);
+  return arr.slice(0, getRandomInt(1, arr.length));
 };
 
 var createOffer = function (number) {
   var address = {
-    x: getRandomInt(OFFERS_OPTIONS.LOCATION.X.MIN, OFFERS_OPTIONS.LOCATION.X.MAX),
-    y: getRandomInt(OFFERS_OPTIONS.LOCATION.Y.MIN, OFFERS_OPTIONS.LOCATION.Y.MAX)
+    x: getRandomInt(OFFERS_LOCATIONS.X.MIN, OFFERS_LOCATIONS.X.MAX),
+    y: getRandomInt(OFFERS_LOCATIONS.Y.MIN, OFFERS_LOCATIONS.Y.MAX)
   };
   var createdOffer = {
     author: {
       avatar: 'img/avatars/user' + (number < 10 ? '0' : '') + (number + 1) + '.png'
     },
     offer: {
-      title: OFFERS_OPTIONS.TITLES[number],
+      title: OFFERS_TITLES[number],
       address: address.x + ', ' + address.y,
-      price: OFFERS_OPTIONS.PRICES[number],
-      type: OFFERS_OPTIONS.TYPES[getRandomInt(0, OFFERS_OPTIONS.TYPES.length - 1)],
-      rooms: OFFERS_OPTIONS.ROOMS[number],
-      guests: OFFERS_OPTIONS.GUESTS[number],
-      checkin: OFFERS_OPTIONS.CHECKS[getRandomInt(0, OFFERS_OPTIONS.CHECKS.length - 1)],
-      checkout: OFFERS_OPTIONS.CHECKS[getRandomInt(0, OFFERS_OPTIONS.CHECKS.length - 1)],
-      features: cutArrRandomly(shuffleArr(OFFERS_OPTIONS.FEATURES)),
-      description: OFFERS_OPTIONS.DESCRIPTIONS[number],
-      photos: shuffleArr(OFFERS_OPTIONS.PHOTOS)
+      price: OFFERS_PRICES[number],
+      type: OFFERS_TYPES[getRandomInt(0, OFFERS_TYPES.length - 1)],
+      rooms: ROOMS_COUNT[number],
+      guests: GUESTS_COUNT[number],
+      checkin: OFFERS_CHECKS[getRandomInt(0, OFFERS_CHECKS.length - 1)],
+      checkout: OFFERS_CHECKS[getRandomInt(0, OFFERS_CHECKS.length - 1)],
+      features: cutArrRandomly(shuffleArr(OFFERS_FEATURES)),
+      description: OFFERS_DESCRIPTIONS[number],
+      photos: shuffleArr(OFFERS_PHOTOS)
     },
     location: {
       x: address.x - PIN_SIZE.WIDTH / 2,
@@ -177,8 +163,8 @@ var renderPin = function (pinInfo) {
 var renderPins = function (pinsInfo) {
   var fragment = document.createDocumentFragment();
 
-  for (var j = 0; j < TOTAL_OFFERS; j++) {
-    fragment.appendChild(renderPin(pinsInfo[j]));
+  for (var i = 0; i < TOTAL_OFFERS; i++) {
+    fragment.appendChild(renderPin(pinsInfo[i]));
   }
 
   return fragment;
