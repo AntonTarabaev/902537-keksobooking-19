@@ -92,7 +92,16 @@ var PIN_SIZE = {
 
 var map = document.querySelector('.map');
 var mapPinsArea = map.querySelector('.map__pins');
+var mapFilters = map.querySelector('.map__filters-container');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var offerCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var photoTemplate = offerCardTemplate.querySelector('.popup__photo');
+var typesMap = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalo: 'Бунгало'
+};
 
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -170,7 +179,64 @@ var renderPins = function (pinsInfo) {
   return fragment;
 };
 
+var renderFeatures = function (offerInfo) {
+  var features = document.createDocumentFragment();
+  var featureElement;
+
+  for (var j = 0; j < offerInfo.offer.features.length; j++) {
+    featureElement = document.createElement('li');
+    featureElement.className = 'popup__feature popup__feature--' + offerInfo.offer.features[j];
+    features.appendChild(featureElement);
+  }
+
+  return features;
+};
+
+var renderPhotos = function (offerInfo) {
+  var photos = document.createDocumentFragment();
+  var photo;
+
+  for (var j = 0; j < offerInfo.offer.photos.length; j++) {
+    photo = photoTemplate.cloneNode(true);
+    photo.src = offerInfo.offer.photos[j];
+    photos.appendChild(photo);
+  }
+
+  return photos;
+};
+
+var renderOffer = function (offerInfo) {
+  var offerElement = offerCardTemplate.cloneNode(true);
+
+  offerElement.querySelector('.popup__title').textContent = offerInfo.offer.title;
+  offerElement.querySelector('.popup__text--address').textContent = offerInfo.offer.address;
+  offerElement.querySelector('.popup__text--price').textContent = offerInfo.offer.price + '₽/ночь';
+  offerElement.querySelector('.popup__type').textContent = typesMap[offerInfo.offer.type];
+  offerElement.querySelector('.popup__text--capacity').textContent = offerInfo.offer.rooms + ' комнаты для ' + offerInfo.offer.guests + ' гостей';
+  offerElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offerInfo.offer.checkin + ' выезд до ' + offerInfo.offer.checkout;
+  // Думал сделать функцию removeAllChilds:
+  // var removeAllChilds = function (element) {
+  //   while (element.firstChild) {
+  //     element.removeChild(element.firstChild);
+  //   }
+  // };
+  // Но она не будет чистой, removeAllChilds(offerElement.querySelector('.popup__features').firstChild) функция меняет параметры внутри себя, как лучше поступить?
+  while (offerElement.querySelector('.popup__features').firstChild) {
+    offerElement.querySelector('.popup__features').removeChild(offerElement.querySelector('.popup__features').firstChild);
+  }
+  offerElement.querySelector('.popup__features').appendChild(renderFeatures(offerInfo));
+  offerElement.querySelector('.popup__description').textContent = offerInfo.offer.description;
+  while (offerElement.querySelector('.popup__photos').firstChild) {
+    offerElement.querySelector('.popup__photos').removeChild(offerElement.querySelector('.popup__photos').firstChild);
+  }
+  offerElement.querySelector('.popup__photos').appendChild(renderPhotos(offerInfo));
+  offerElement.querySelector('.popup__avatar').src = offerInfo.author.avatar;
+
+  return offerElement;
+};
+
 map.classList.remove('map--faded');
 
 var offersArr = generateOffers(TOTAL_OFFERS);
 mapPinsArea.appendChild(renderPins(offersArr));
+mapFilters.insertAdjacentElement('beforebegin', renderOffer(offersArr[0]));
