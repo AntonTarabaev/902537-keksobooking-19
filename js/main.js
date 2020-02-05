@@ -359,7 +359,7 @@ var togglePageState = function (disable) {
 
     adAddress.value = getAddress(mainPin, MAIN_PIN_PIZE.WIDTH / 2, MAIN_PIN_PIZE.HEIGHT / 2);
     removeRenderedPins();
-  } else {
+  } else if (map.classList.contains('map--faded')) {
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     toggleElementsDisabledProperty(pageSelects);
