@@ -31,6 +31,15 @@
     },
     cutArrRandomly: function (arr) {
       return arr.slice(0, this.getRandomInt(1, arr.length));
+    },
+    toggleElementsDisabledProperty: function (elements, disabled) {
+      for (var i = 0; i < elements.length; i++) {
+        if (disabled) {
+          elements[i].disabled = true;
+        } else {
+          elements[i].disabled = false;
+        }
+      }
     }
   };
 })();

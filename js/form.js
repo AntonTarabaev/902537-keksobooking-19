@@ -14,6 +14,7 @@
   var adCheckin = adForm.querySelector('#timein');
   var adCheckout = adForm.querySelector('#timeout');
   var adSubmitBtn = adForm.querySelector('.ad-form__submit');
+  var adResetBtn = adForm.querySelector('.ad-form__reset');
   var RoomsCapacity = {
     1: [1],
     2: [1, 2],
@@ -136,6 +137,12 @@
 
   adSubmitBtn.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, validateForm);
+  });
+
+  adResetBtn.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    adForm.reset();
+    window.togglePageState(true);
   });
 
   setMinAdCost();
