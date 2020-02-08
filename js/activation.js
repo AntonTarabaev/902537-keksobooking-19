@@ -17,7 +17,7 @@
       window.util.toggleElementsDisabledProperty(pageInputs, true);
       adDescription.disabled = true;
 
-      adAddress.value = window.map.getAddress();
+      window.drag.resetPinCoords();
       window.map.removeRenderedPins();
       window.map.removePopup();
     } else if (map.classList.contains('map--faded')) {
@@ -28,7 +28,6 @@
       adAddress.readOnly = true;
       adDescription.disabled = false;
 
-      adAddress.value = window.map.getAddress();
       window.map.showRenderedPins();
       window.map.addMapCardElement(0);
     }
