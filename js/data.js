@@ -76,19 +76,19 @@
     'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
     'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
   ];
+  var PIN_SIZE = {
+    WIDTH: 50,
+    HEIGHT: 70
+  };
   var OFFERS_LOCATIONS = {
     X: {
-      MIN: 70,
-      MAX: 1070,
+      MIN: 0 - PIN_SIZE.WIDTH / 2,
+      MAX: 1200 - PIN_SIZE.WIDTH / 2,
     },
     Y: {
-      MIN: 130,
-      MAX: 630
+      MIN: 130 - PIN_SIZE.HEIGHT,
+      MAX: 630 - PIN_SIZE.HEIGHT
     }
-  };
-  var PIN_SIZE = {
-    WIDTH: 40,
-    HEIGHT: 40
   };
 
   var createOffer = function (number) {
@@ -103,7 +103,7 @@
       },
       offer: {
         title: OFFERS_TITLES[number],
-        address: address.x + ', ' + address.y,
+        address: address.x - PIN_SIZE.WIDTH / 2 + ', ' + (address.y - PIN_SIZE.HEIGHT),
         price: OFFERS_PRICES[number],
         type: OFFERS_TYPES[window.util.getRandomInt(0, OFFERS_TYPES.length - 1)],
         rooms: ROOMS_COUNT[number],
@@ -115,8 +115,8 @@
         photos: window.util.shuffleArr(OFFERS_PHOTOS)
       },
       location: {
-        x: address.x - PIN_SIZE.WIDTH / 2,
-        y: address.y - PIN_SIZE.HEIGHT
+        x: address.x,
+        y: address.y
       },
       pin: {
         pinNumber: number

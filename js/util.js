@@ -16,9 +16,9 @@
         action();
       }
     },
-    isLeftMouseBtnEvent: function (evt, action) {
+    isLeftMouseBtnEvent: function (evt, action, argument) {
       if (evt.button === LEFT_MOUSE_BTN_CODE) {
-        action();
+        action(argument);
       }
     },
     getRandomInt: function (min, max) {
