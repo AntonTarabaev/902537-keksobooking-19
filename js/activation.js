@@ -18,8 +18,8 @@
       adDescription.disabled = true;
 
       window.drag.resetPinCoords();
-      window.map.removeRenderedPins();
       window.map.removePopup();
+      window.map.removeRenderedPins();
     } else if (map.classList.contains('map--faded')) {
       map.classList.remove('map--faded');
       adForm.classList.remove('ad-form--disabled');
