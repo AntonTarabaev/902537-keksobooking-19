@@ -11,8 +11,10 @@
 
   var removePopup = function () {
     var mapCard = map.querySelector('.map__card');
+    var activePin = mapPinsArea.querySelector('.map__pin--active');
     if (mapCard !== null) {
       mapCard.remove();
+      activePin.classList.remove('map__pin--active');
       document.removeEventListener('keydown', onPopupEscPress);
     }
   };
@@ -29,6 +31,7 @@
   };
 
   var addMapCardElement = function (number) {
+    mapPinsArea.querySelector('[data-number="' + number + '"]').classList.add('map__pin--active');
     mapFilters.insertAdjacentElement('beforebegin', window.offersCards[number]);
     addPopupCloseHandlers();
   };

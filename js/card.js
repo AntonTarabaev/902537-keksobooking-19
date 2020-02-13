@@ -55,25 +55,33 @@
     offerElement.querySelector('.popup__type').textContent = TypesMap[offerInfo.offer.type.toUpperCase()];
     offerElement.querySelector('.popup__text--capacity').textContent = offerInfo.offer.rooms + ' комнаты для ' + offerInfo.offer.guests + ' гостей';
     offerElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offerInfo.offer.checkin + ' выезд до ' + offerInfo.offer.checkout;
-    offerElement.querySelector('.popup__features').innerHTML = '';
-    offerElement.querySelector('.popup__features').appendChild(renderFeatures(offerInfo));
+    if (offerInfo.offer.features.length === 0) {
+      offerElement.querySelector('.popup__features').remove();
+    } else {
+      offerElement.querySelector('.popup__features').innerHTML = '';
+      offerElement.querySelector('.popup__features').appendChild(renderFeatures(offerInfo));
+    }
     offerElement.querySelector('.popup__description').textContent = offerInfo.offer.description;
-    offerElement.querySelector('.popup__photos').innerHTML = '';
-    offerElement.querySelector('.popup__photos').appendChild(renderPhotos(offerInfo));
+    if (offerInfo.offer.photos.length === 0) {
+      offerElement.querySelector('.popup__photos').remove();
+    } else {
+      offerElement.querySelector('.popup__photos').innerHTML = '';
+      offerElement.querySelector('.popup__photos').appendChild(renderPhotos(offerInfo));
+    }
     offerElement.querySelector('.popup__avatar').src = offerInfo.author.avatar;
 
     return offerElement;
   };
 
-  var renderOffers = function (offersInfo) {
+  window.renderOffers = function (offersInfo) {
     var renderedOffers = [];
 
-    for (var i = 0; i < window.offersArr.length; i++) {
-      renderedOffers[i] = renderOffer(offersInfo[i]);
+    for (var i = 0; i < offersInfo.length; i++) {
+      if (offersInfo[i].offer) {
+        renderedOffers[i] = renderOffer(offersInfo[i]);
+      }
     }
 
     return renderedOffers;
   };
-
-  window.offersCards = renderOffers(window.offersArr);
 })();
