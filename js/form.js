@@ -15,6 +15,8 @@
   var adCheckout = adForm.querySelector('#timeout');
   var adSubmitBtn = adForm.querySelector('.ad-form__submit');
   var adResetBtn = adForm.querySelector('.ad-form__reset');
+  var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+  var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
   var RoomsCapacity = {
     1: [1],
     2: [1, 2],
@@ -115,6 +117,56 @@
     validateAdPrice();
   };
 
+  var onMessageEscPress = function (evt) {
+    window.util.isEscEvent(evt, removeMessage);
+  };
+
+  var onMessageLeftClick = function (evt) {
+    window.util.isLeftMouseBtnEvent(evt, removeMessage);
+  };
+
+  var removeMessage = function () {
+    var message = document.querySelector('.submit-message');
+
+    message.remove();
+    document.removeEventListener('click', onMessageLeftClick);
+    document.removeEventListener('keydown', onMessageEscPress);
+  };
+
+  var addMessageCloseHandlers = function () {
+    var messageClose = document.querySelector('.error__button');
+
+    document.addEventListener('click', onMessageLeftClick);
+    document.addEventListener('keydown', onMessageEscPress);
+
+    if (messageClose) {
+      messageClose.addEventListener('keydown', function (evt) {
+        window.util.isEnterEvent(evt, removeMessage);
+      });
+    }
+  };
+
+  var onSuccess = function () {
+    var successMessageElement = successMessageTemplate.cloneNode(true);
+
+    successMessageElement.classList.add('submit-message');
+    addMessageCloseHandlers(successMessageElement);
+
+    document.body.insertAdjacentElement('afterbegin', successMessageElement);
+
+    adForm.reset();
+    window.togglePageState(true);
+  };
+
+  var onError = function () {
+    var errorMessageElement = errorMessageTemplate.cloneNode(true);
+
+    errorMessageElement.classList.add('submit-message');
+    addMessageCloseHandlers(errorMessageElement);
+
+    document.body.insertAdjacentElement('afterbegin', errorMessageElement);
+  };
+
   adType.addEventListener('change', function () {
     setMinAdCost();
   });
@@ -143,6 +195,11 @@
     evt.preventDefault();
     adForm.reset();
     window.togglePageState(true);
+  });
+
+  adForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(adForm), onSuccess, onError);
   });
 
   setMinAdCost();
