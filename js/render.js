@@ -3,6 +3,7 @@
 (function () {
   var offerCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var photoTemplate = offerCardTemplate.querySelector('.popup__photo');
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var TypesMap = {
     PALACE: 'Дворец',
     FLAT: 'Квартира',
@@ -73,15 +74,40 @@
     return offerElement;
   };
 
-  window.renderOffers = function (offersInfo) {
-    var renderedOffers = [];
+  var renderPin = function (pinInfo, number) {
+    var pinElement = pinTemplate.cloneNode(true);
 
-    offersInfo.forEach(function (item, index) {
-      if (item.offer) {
-        renderedOffers[index] = renderOffer(item);
-      }
-    });
+    pinElement.style.left = pinInfo.location.x + 'px';
+    pinElement.style.top = pinInfo.location.y + 'px';
+    pinElement.querySelector('img').src = pinInfo.author.avatar;
+    pinElement.querySelector('img').alt = pinInfo.offer.title;
+    pinElement.dataset.number = number;
 
-    return renderedOffers;
+    return pinElement;
+  };
+
+  window.render = {
+    renderPins: function (pinsInfo) {
+      var fragment = document.createDocumentFragment();
+
+      pinsInfo.forEach(function (item, index) {
+        if (item.offer) {
+          fragment.appendChild(renderPin(item, index));
+        }
+      });
+
+      return fragment;
+    },
+    renderOffers: function (offersInfo) {
+      var renderedOffers = [];
+
+      offersInfo.forEach(function (item, index) {
+        if (item.offer) {
+          renderedOffers[index] = renderOffer(item);
+        }
+      });
+
+      return renderedOffers;
+    }
   };
 })();

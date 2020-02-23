@@ -59,8 +59,8 @@
   };
 
   var updateOffers = function (offersData) {
-    window.renderedPins = window.renderPins(offersData.slice(0, OFFERS_LIMIT));
-    window.offersCards = window.renderOffers(offersData.slice(0, OFFERS_LIMIT));
+    window.renderedPins = window.render.renderPins(offersData.slice(0, OFFERS_LIMIT));
+    window.offersCards = window.render.renderOffers(offersData.slice(0, OFFERS_LIMIT));
   };
 
   var onFilterChange = window.util.debounce(function () {
