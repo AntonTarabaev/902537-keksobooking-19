@@ -3,6 +3,12 @@
 (function () {
   var MIN_TITLE_LENGTH = 30;
   var MAX_TITLE_LENGTH = 100;
+  var RoomsCapacity = {
+    1: [1],
+    2: [1, 2],
+    3: [1, 2, 3],
+    100: [0]
+  };
 
   var adForm = document.querySelector('.ad-form');
   var adTitle = adForm.querySelector('#title');
@@ -17,12 +23,6 @@
   var adResetBtn = adForm.querySelector('.ad-form__reset');
   var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
   var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
-  var RoomsCapacity = {
-    1: [1],
-    2: [1, 2],
-    3: [1, 2, 3],
-    100: [0]
-  };
 
   var getMinAdCost = function () {
     var minCost = 0;

@@ -55,15 +55,14 @@
 
   window.map = {
     showRenderedPins: function () {
-      var renderedPins = window.renderedPins.cloneNode(true);
-      mapPinsArea.appendChild(renderedPins);
+      mapPinsArea.appendChild(window.renderedPins);
     },
     removeRenderedPins: function () {
       var renderedPins = mapPinsArea.querySelectorAll('.map__pin:not(.map__pin--main)');
 
-      for (var i = 0; i < renderedPins.length; i++) {
-        renderedPins[i].remove();
-      }
+      renderedPins.forEach(function (item) {
+        item.remove();
+      });
     },
     removePopup: removePopup,
     addMapCardElement: addMapCardElement

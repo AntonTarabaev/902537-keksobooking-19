@@ -4,18 +4,27 @@
   var URL = 'https://js.dump.academy/keksobooking';
   var TIMEOUT_IN_MS = 10000;
   var MessageTexts = {
-    CONNECTION_ERROR: 'Произошла ошибка соединения',
-    TIMEOUT_ERROR: 'Превышено время ожидания'
+    CONNECTION_ERROR: 'Произошла ошибка соединения. Попробуйте обновить страницу.',
+    TIMEOUT_ERROR: 'Превышено время ожидания. Попробуйте обновить страницу.',
+    UNKNOWN_ERROR: 'Произошла неизвестная ошибка. Попробуйте обновить страницу.',
+    NOT_FOUND: 'Страница не найдена. Проверьте запрос.',
+    SERVICE_UNAVAILABLE: 'Сервер недоступен. Попробуйте позже.'
   };
   var StatusCode = {
-    OK: 200
+    OK: 200,
+    NOT_FOUND: 404,
+    SERVICE_UNAVAILABLE: 503
   };
 
   var onXhrLoad = function (xhr, onLoad, onError) {
     if (xhr.status === StatusCode.OK) {
       onLoad(xhr.response);
+    } else if (xhr.status === StatusCode.NOT_FOUND) {
+      onError(MessageTexts.NOT_FOUND);
+    } else if (xhr.status === StatusCode.SERVICE_UNAVAILABLE) {
+      onError(MessageTexts.SERVICE_UNAVAILABLE);
     } else {
-      onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      onError(MessageTexts.UNKNOWN_ERROR + ' Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
     }
   };
 
