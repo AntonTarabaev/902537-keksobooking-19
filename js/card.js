@@ -3,8 +3,7 @@
 (function () {
   var offerCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var photoTemplate = offerCardTemplate.querySelector('.popup__photo');
-  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var TypesMap = {
+  var BookingType = {
     PALACE: 'Дворец',
     FLAT: 'Квартира',
     HOUSE: 'Дом',
@@ -53,7 +52,7 @@
     offerElement.querySelector('.popup__title').textContent = offerInfo.offer.title;
     offerElement.querySelector('.popup__text--address').textContent = offerInfo.offer.address;
     offerElement.querySelector('.popup__text--price').textContent = offerInfo.offer.price + '₽/ночь';
-    offerElement.querySelector('.popup__type').textContent = TypesMap[offerInfo.offer.type.toUpperCase()];
+    offerElement.querySelector('.popup__type').textContent = BookingType[offerInfo.offer.type.toUpperCase()];
     offerElement.querySelector('.popup__text--capacity').textContent = offerInfo.offer.rooms + ' комнаты для ' + offerInfo.offer.guests + ' гостей';
     offerElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offerInfo.offer.checkin + ' выезд до ' + offerInfo.offer.checkout;
     if (offerInfo.offer.features.length === 0) {
@@ -74,40 +73,17 @@
     return offerElement;
   };
 
-  var renderPin = function (pinInfo, number) {
-    var pinElement = pinTemplate.cloneNode(true);
+  var renderOffers = function (offersInfo) {
+    var renderedOffers = [];
 
-    pinElement.style.left = pinInfo.location.x + 'px';
-    pinElement.style.top = pinInfo.location.y + 'px';
-    pinElement.querySelector('img').src = pinInfo.author.avatar;
-    pinElement.querySelector('img').alt = pinInfo.offer.title;
-    pinElement.dataset.number = number;
+    offersInfo.forEach(function (item) {
+      if (item.offer) {
+        renderedOffers.push(renderOffer(item));
+      }
+    });
 
-    return pinElement;
+    return renderedOffers;
   };
 
-  window.render = {
-    renderPins: function (pinsInfo) {
-      var fragment = document.createDocumentFragment();
-
-      pinsInfo.forEach(function (item, index) {
-        if (item.offer) {
-          fragment.appendChild(renderPin(item, index));
-        }
-      });
-
-      return fragment;
-    },
-    renderOffers: function (offersInfo) {
-      var renderedOffers = [];
-
-      offersInfo.forEach(function (item, index) {
-        if (item.offer) {
-          renderedOffers[index] = renderOffer(item);
-        }
-      });
-
-      return renderedOffers;
-    }
-  };
+  window.renderOffers = renderOffers;
 })();

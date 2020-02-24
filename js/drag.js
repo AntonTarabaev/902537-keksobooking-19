@@ -31,6 +31,12 @@
       : getPinCoords(mainPin, MAIN_PIN_SIZE.WIDTH / 2, MAIN_PIN_SIZE.HEIGHT + MAIN_PIN_SIZE.LEG);
   };
 
+  var resetPinCoords = function () {
+    mainPin.style.top = startPosition.y;
+    mainPin.style.left = startPosition.x;
+    adAddress.value = getAddress();
+  };
+
   var onMainPinLeftClick = function (evt) {
     evt.preventDefault();
 
@@ -96,10 +102,6 @@
 
   window.drag = {
     getAddress: getAddress,
-    resetPinCoords: function () {
-      mainPin.style.top = startPosition.y;
-      mainPin.style.left = startPosition.x;
-      adAddress.value = getAddress();
-    }
+    resetPinCoords: resetPinCoords
   };
 })();

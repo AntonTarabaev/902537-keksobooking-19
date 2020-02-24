@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var OFFERS_LIMIT = 5;
   var PriceRange = {
     LOW: {
       MIN: 0,
@@ -58,11 +57,6 @@
     });
   };
 
-  var updateOffers = function (offersData) {
-    window.renderedPins = window.render.renderPins(offersData.slice(0, OFFERS_LIMIT));
-    window.offersCards = window.render.renderOffers(offersData.slice(0, OFFERS_LIMIT));
-  };
-
   var onFilterChange = window.util.debounce(function () {
     filteredData = data
       .filter(filterByType)
@@ -71,34 +65,35 @@
       .filter(filterByGuests)
       .filter(filterByFeatures);
     window.map.removePopup();
-    window.map.removeRenderedPins();
-    updateOffers(filteredData);
+    window.map.removePins();
+    window.map.updateOffers(filteredData);
     if (filteredData.length > 0) {
-      window.map.showRenderedPins();
-      window.map.addMapCardElement(0);
+      window.map.showPins();
     }
   });
 
   var filtrate = function () {
     window.util.toggleElementsDisabledProperty(filterFields);
-    updateOffers(data);
     filter.addEventListener('change', onFilterChange);
   };
 
+  var activateFilter = function (offers) {
+    data = offers;
+    filtrate();
+  };
+
+  var resetFilter = function () {
+    window.util.toggleElementsDisabledProperty(filterFields, true);
+    filterSelects.forEach(function (select) {
+      select.value = 'any';
+    });
+    filterInputs.forEach(function (input) {
+      input.checked = false;
+    });
+  };
+
   window.filter = {
-    activateFilter: function (offers) {
-      data = offers;
-      filtrate();
-    },
-    resetFilter: function () {
-      window.util.toggleElementsDisabledProperty(filterFields, true);
-      filterSelects.forEach(function (select) {
-        select.value = 'any';
-      });
-      filterInputs.forEach(function (input) {
-        input.checked = false;
-      });
-      updateOffers(data);
-    }
+    activateFilter: activateFilter,
+    resetFilter: resetFilter
   };
 })();

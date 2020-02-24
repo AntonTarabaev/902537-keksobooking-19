@@ -11,7 +11,9 @@
   };
 
   var adForm = document.querySelector('.ad-form');
+  var formInputsAndSelects = adForm.querySelectorAll('input, select');
   var adTitle = adForm.querySelector('#title');
+  var adAddress = adForm.querySelector('#address');
   var adType = adForm.querySelector('#type');
   var adPrice = adForm.querySelector('#price');
   var adRooms = adForm.querySelector('#room_number');
@@ -19,6 +21,7 @@
   var adGuestsOptions = adGuests.querySelectorAll('option');
   var adCheckin = adForm.querySelector('#timein');
   var adCheckout = adForm.querySelector('#timeout');
+  var adDescription = adForm.querySelector('#description');
   var adSubmitBtn = adForm.querySelector('.ad-form__submit');
   var adResetBtn = adForm.querySelector('.ad-form__reset');
   var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
@@ -155,7 +158,7 @@
     document.body.insertAdjacentElement('afterbegin', successMessageElement);
 
     adForm.reset();
-    window.togglePageState(true);
+    window.map.togglePageState(true);
   };
 
   var onError = function () {
@@ -165,6 +168,19 @@
     addMessageCloseHandlers(errorMessageElement);
 
     document.body.insertAdjacentElement('afterbegin', errorMessageElement);
+  };
+
+  var toggleFormState = function (disable) {
+    if (disable) {
+      adForm.classList.add('ad-form--disabled');
+      window.util.toggleElementsDisabledProperty(formInputsAndSelects, true);
+      adDescription.disabled = true;
+    } else {
+      adForm.classList.remove('ad-form--disabled');
+      window.util.toggleElementsDisabledProperty(formInputsAndSelects);
+      adAddress.readOnly = true;
+      adDescription.disabled = false;
+    }
   };
 
   adType.addEventListener('change', function () {
@@ -194,7 +210,7 @@
   adResetBtn.addEventListener('click', function (evt) {
     evt.preventDefault();
     adForm.reset();
-    window.togglePageState(true);
+    window.map.togglePageState(true);
   });
 
   adForm.addEventListener('submit', function (evt) {
@@ -204,4 +220,6 @@
 
   setMinAdCost();
   disableImpossibeCapacityOptions();
+
+  window.toggleFormState = toggleFormState;
 })();

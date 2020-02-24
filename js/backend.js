@@ -3,7 +3,7 @@
 (function () {
   var URL = 'https://js.dump.academy/keksobooking';
   var TIMEOUT_IN_MS = 10000;
-  var MessageTexts = {
+  var ErrorMessage = {
     CONNECTION_ERROR: 'Произошла ошибка соединения. Попробуйте обновить страницу.',
     TIMEOUT_ERROR: 'Превышено время ожидания. Попробуйте обновить страницу.',
     UNKNOWN_ERROR: 'Произошла неизвестная ошибка. Попробуйте обновить страницу.',
@@ -20,11 +20,11 @@
     if (xhr.status === StatusCode.OK) {
       onLoad(xhr.response);
     } else if (xhr.status === StatusCode.NOT_FOUND) {
-      onError(MessageTexts.NOT_FOUND);
+      onError(ErrorMessage.NOT_FOUND);
     } else if (xhr.status === StatusCode.SERVICE_UNAVAILABLE) {
-      onError(MessageTexts.SERVICE_UNAVAILABLE);
+      onError(ErrorMessage.SERVICE_UNAVAILABLE);
     } else {
-      onError(MessageTexts.UNKNOWN_ERROR + ' Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      onError(ErrorMessage.UNKNOWN_ERROR + ' Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
     }
   };
 
@@ -33,35 +33,39 @@
       onXhrLoad(xhr, onLoad, onError);
     });
     xhr.addEventListener('error', function () {
-      onError(MessageTexts.CONNECTION_ERROR);
+      onError(ErrorMessage.CONNECTION_ERROR);
     });
     xhr.addEventListener('timeout', function () {
-      onError(MessageTexts.TIMEOUT_ERROR);
+      onError(ErrorMessage.TIMEOUT_ERROR);
     });
   };
 
+  var load = function (onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    addXhrListeners(xhr, onLoad, onError);
+
+    xhr.timeout = TIMEOUT_IN_MS;
+
+    xhr.open('GET', URL + '/data');
+    xhr.send();
+  };
+
+  var save = function (data, onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    addXhrListeners(xhr, onLoad, onError);
+
+    xhr.timeout = TIMEOUT_IN_MS;
+
+    xhr.open('POST', URL);
+    xhr.send(data);
+  };
+
   window.backend = {
-    load: function (onLoad, onError) {
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-
-      addXhrListeners(xhr, onLoad, onError);
-
-      xhr.timeout = TIMEOUT_IN_MS;
-
-      xhr.open('GET', URL + '/data');
-      xhr.send();
-    },
-    save: function (data, onLoad, onError) {
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-
-      addXhrListeners(xhr, onLoad, onError);
-
-      xhr.timeout = TIMEOUT_IN_MS;
-
-      xhr.open('POST', URL);
-      xhr.send(data);
-    }
+    load: load,
+    save: save
   };
 })();
