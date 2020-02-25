@@ -3,7 +3,7 @@
 (function () {
   var offerCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var photoTemplate = offerCardTemplate.querySelector('.popup__photo');
-  var TypesMap = {
+  var BookingType = {
     PALACE: 'Дворец',
     FLAT: 'Квартира',
     HOUSE: 'Дом',
@@ -21,9 +21,9 @@
   var renderFeatures = function (offerInfo) {
     var features = document.createDocumentFragment();
 
-    for (var j = 0; j < offerInfo.offer.features.length; j++) {
-      features.appendChild(renderFeature(offerInfo.offer.features[j]));
-    }
+    offerInfo.offer.features.forEach(function (item) {
+      features.appendChild(renderFeature(item));
+    });
 
     return features;
   };
@@ -39,9 +39,9 @@
   var renderPhotos = function (offerInfo) {
     var photos = document.createDocumentFragment();
 
-    for (var j = 0; j < offerInfo.offer.photos.length; j++) {
-      photos.appendChild(renderPhoto(offerInfo.offer.photos[j]));
-    }
+    offerInfo.offer.photos.forEach(function (item) {
+      photos.appendChild(renderPhoto(item));
+    });
 
     return photos;
   };
@@ -52,7 +52,7 @@
     offerElement.querySelector('.popup__title').textContent = offerInfo.offer.title;
     offerElement.querySelector('.popup__text--address').textContent = offerInfo.offer.address;
     offerElement.querySelector('.popup__text--price').textContent = offerInfo.offer.price + '₽/ночь';
-    offerElement.querySelector('.popup__type').textContent = TypesMap[offerInfo.offer.type.toUpperCase()];
+    offerElement.querySelector('.popup__type').textContent = BookingType[offerInfo.offer.type.toUpperCase()];
     offerElement.querySelector('.popup__text--capacity').textContent = offerInfo.offer.rooms + ' комнаты для ' + offerInfo.offer.guests + ' гостей';
     offerElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offerInfo.offer.checkin + ' выезд до ' + offerInfo.offer.checkout;
     if (offerInfo.offer.features.length === 0) {
@@ -73,15 +73,17 @@
     return offerElement;
   };
 
-  window.renderOffers = function (offersInfo) {
+  var renderOffers = function (offersInfo) {
     var renderedOffers = [];
 
-    for (var i = 0; i < offersInfo.length; i++) {
-      if (offersInfo[i].offer) {
-        renderedOffers[i] = renderOffer(offersInfo[i]);
+    offersInfo.forEach(function (item) {
+      if (item.offer) {
+        renderedOffers.push(renderOffer(item));
       }
-    }
+    });
 
     return renderedOffers;
   };
+
+  window.renderOffers = renderOffers;
 })();

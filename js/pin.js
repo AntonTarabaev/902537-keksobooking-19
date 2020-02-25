@@ -15,15 +15,17 @@
     return pinElement;
   };
 
-  window.renderPins = function (pinsInfo) {
+  var renderPins = function (pinsInfo) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < pinsInfo.length; i++) {
-      if (pinsInfo[i].offer) {
-        fragment.appendChild(renderPin(pinsInfo[i], i));
+    pinsInfo.forEach(function (item, index) {
+      if (item.offer) {
+        fragment.appendChild(renderPin(item, index));
       }
-    }
+    });
 
     return fragment;
   };
+
+  window.renderPins = renderPins;
 })();
