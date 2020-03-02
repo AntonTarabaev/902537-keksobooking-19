@@ -3,6 +3,7 @@
 (function () {
   var MIN_TITLE_LENGTH = 30;
   var MAX_TITLE_LENGTH = 100;
+  var INVALID_FIELD_BORDER = '2px solid red';
   var RoomsCapacity = {
     1: [1],
     2: [1, 2],
@@ -71,6 +72,20 @@
     adCheckout.value = adCheckin.value;
   };
 
+  var toggleInvalidFieldBorder = function (element) {
+    if (element.validity.valid) {
+      element.style.border = null;
+    } else {
+      element.style.border = INVALID_FIELD_BORDER;
+    }
+  };
+
+  var resetInvalidFieldsBorder = function () {
+    formInputsAndSelects.forEach(function (it) {
+      it.style.border = null;
+    });
+  };
+
   var validateAdTitle = function () {
     if (adTitle.validity.tooShort) {
       adTitle.setCustomValidity('Заголовок объявления должен состоять минимум из ' + MIN_TITLE_LENGTH + ' символов');
@@ -81,6 +96,7 @@
     } else {
       adTitle.setCustomValidity('');
     }
+    toggleInvalidFieldBorder(adTitle);
   };
 
   var validateAdPrice = function () {
@@ -95,6 +111,7 @@
     } else {
       adPrice.setCustomValidity('');
     }
+    toggleInvalidFieldBorder(adPrice);
   };
 
   var validateAdGuest = function () {
@@ -103,6 +120,7 @@
     } else {
       adGuests.setCustomValidity('');
     }
+    toggleInvalidFieldBorder(adGuests);
   };
 
   var validateCheckTime = function () {
@@ -111,6 +129,7 @@
     } else {
       adCheckout.setCustomValidity('');
     }
+    toggleInvalidFieldBorder(adCheckout);
   };
 
   var validateForm = function () {
@@ -173,11 +192,14 @@
   var toggleFormState = function (disable) {
     if (disable) {
       adForm.classList.add('ad-form--disabled');
+      resetInvalidFieldsBorder();
       window.util.toggleElementsDisabledProperty(formInputsAndSelects, true);
+      window.toggleImageLoadState(true);
       adDescription.disabled = true;
     } else {
       adForm.classList.remove('ad-form--disabled');
       window.util.toggleElementsDisabledProperty(formInputsAndSelects);
+      window.toggleImageLoadState();
       adAddress.readOnly = true;
       adDescription.disabled = false;
     }
