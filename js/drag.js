@@ -10,16 +10,39 @@
   var map = document.querySelector('.map');
   var mainPin = map.querySelector('.map__pin--main');
   var adAddress = document.querySelector('#address');
-  var startPosition = {
-    x: mainPin.style.left,
-    y: mainPin.style.top
-  };
   var DragLimits = {
     MIN_X: 0 - MAIN_PIN_SIZE.WIDTH / 2,
     MAX_X: 1200 - MAIN_PIN_SIZE.WIDTH / 2,
     MIN_Y: 130 - (MAIN_PIN_SIZE.HEIGHT + MAIN_PIN_SIZE.LEG),
     MAX_Y: 630 - (MAIN_PIN_SIZE.HEIGHT + MAIN_PIN_SIZE.LEG)
   };
+
+  var Rect = function (left, top, right, bottom) {
+    this.left = left;
+    this.top = top;
+    this.right = right;
+    this.bottom = bottom;
+  };
+
+  var Coordinate = function (x, y, constraints) {
+    this.x = x;
+    this.y = y;
+    this._constraints = constraints;
+  };
+
+  Coordinate.prototype.setX = function (x) {
+    if (x >= this._constraints.left && x <= this._constraints.right) {
+      this.x = x;
+    }
+  };
+
+  Coordinate.prototype.setY = function (y) {
+    if (y >= this._constraints.top && y <= this._constraints.bottom) {
+      this.y = y;
+    }
+  };
+
+  var startPosition = new Coordinate(mainPin.style.left, mainPin.style.top);
 
   var getPinCoords = function (pin, xOffset, yOffset) {
     return (parseInt(pin.style.left, 10) + xOffset) + ', ' + (parseInt(pin.style.top, 10) + yOffset);
@@ -40,10 +63,7 @@
   var onMainPinLeftClick = function (evt) {
     evt.preventDefault();
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
+    var startCoords = new Coordinate(evt.clientX, evt.clientY);
 
     var isDragged = false;
 
@@ -51,29 +71,17 @@
       moveEvt.preventDefault();
       isDragged = true;
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
+      var shift = new Coordinate(startCoords.x - moveEvt.clientX, startCoords.y - moveEvt.clientY);
 
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-      if (parseInt(mainPin.style.top, 10) > DragLimits.MAX_Y) {
-        mainPin.style.top = DragLimits.MAX_Y + 'px';
-      } else if (parseInt(mainPin.style.top, 10) < DragLimits.MIN_Y) {
-        mainPin.style.top = DragLimits.MIN_Y + 'px';
-      } else {
-        mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-      }
-      if (parseInt(mainPin.style.left, 10) > DragLimits.MAX_X) {
-        mainPin.style.left = DragLimits.MAX_X + 'px';
-      } else if (parseInt(mainPin.style.left, 10) < DragLimits.MIN_X) {
-        mainPin.style.left = DragLimits.MIN_X + 'px';
-      } else {
-        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-      }
+      startCoords = new Coordinate(moveEvt.clientX, moveEvt.clientY);
+
+      var position = new Coordinate(mainPin.offsetLeft, mainPin.offsetTop, new Rect(DragLimits.MIN_X, DragLimits.MIN_Y, DragLimits.MAX_X, DragLimits.MAX_Y));
+      position.setX(mainPin.offsetLeft - shift.x);
+      position.setY(mainPin.offsetTop - shift.y);
+
+      mainPin.style.left = position.x + 'px';
+      mainPin.style.top = position.y + 'px';
+
       adAddress.value = getAddress();
     };
 
