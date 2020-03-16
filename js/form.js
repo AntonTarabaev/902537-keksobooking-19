@@ -129,6 +129,7 @@
     } else {
       adCheckout.setCustomValidity('');
     }
+    toggleInvalidFieldBorder(adCheckin);
     toggleInvalidFieldBorder(adCheckout);
   };
 
@@ -195,6 +196,8 @@
       resetInvalidFieldsBorder();
       window.util.toggleElementsDisabledProperty(formInputsAndSelects, true);
       window.toggleImageLoadState(true);
+      setMinAdCost();
+      disableImpossibeCapacityOptions();
       adDescription.disabled = true;
     } else {
       adForm.classList.remove('ad-form--disabled');
@@ -205,20 +208,35 @@
     }
   };
 
+  adTitle.addEventListener('change', function () {
+    validateAdTitle();
+  });
+
+  adPrice.addEventListener('change', function () {
+    validateAdPrice();
+  });
+
   adType.addEventListener('change', function () {
     setMinAdCost();
   });
 
   adRooms.addEventListener('change', function () {
     disableImpossibeCapacityOptions();
+    validateAdGuest();
+  });
+
+  adGuests.addEventListener('change', function () {
+    validateAdGuest();
   });
 
   adCheckin.addEventListener('change', function () {
     setAdCheckoutTime();
+    validateCheckTime();
   });
 
   adCheckout.addEventListener('change', function () {
     setAdCheckinTime();
+    validateCheckTime();
   });
 
   adSubmitBtn.addEventListener('click', function () {
@@ -231,17 +249,20 @@
 
   adResetBtn.addEventListener('click', function (evt) {
     evt.preventDefault();
-    adForm.reset();
-    window.map.togglePageState(true);
+
+    if (!adForm.classList.contains('ad-form--disabled')) {
+      adForm.reset();
+      window.map.togglePageState(true);
+    }
   });
 
   adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(adForm), onSuccess, onError);
-  });
 
-  setMinAdCost();
-  disableImpossibeCapacityOptions();
+    if (!adForm.classList.contains('ad-form--disabled')) {
+      window.backend.save(new FormData(adForm), onSuccess, onError);
+    }
+  });
 
   window.toggleFormState = toggleFormState;
 })();

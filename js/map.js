@@ -74,9 +74,8 @@
 
   var onSuccess = function (offers) {
     updateOffers(offers);
-    window.filter.activateFilter(offers);
+    window.filter.activate(offers);
     showPins();
-    addMapCardElement(0);
   };
 
   var onError = function (errorMessage) {
@@ -99,7 +98,7 @@
       removePins();
 
       window.drag.resetPinCoords();
-      window.filter.resetFilter();
+      window.filter.reset();
     } else {
       map.classList.remove('map--faded');
 

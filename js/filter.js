@@ -93,7 +93,7 @@
   };
 
   window.filter = {
-    activateFilter: activateFilter,
-    resetFilter: resetFilter
+    activate: activateFilter,
+    reset: resetFilter
   };
 })();
