@@ -26,14 +26,9 @@
   var guestsFilter = filter.querySelector('#housing-guests');
   var featuresFilter = filter.querySelector('#housing-features');
   var data = [];
-  var filteredData = [];
-
-  var filterByProperty = function (it, item, key) {
-    return it.value === 'any' ? true : it.value === item[key].toString();
-  };
 
   var filterByType = function (item) {
-    return filterByProperty(typeFilter, item.offer, 'type');
+    return typeFilter.value === 'any' ? true : typeFilter.value === item.offer['type'];
   };
 
   var filterByPrice = function (item) {
@@ -42,11 +37,11 @@
   };
 
   var filterByRooms = function (item) {
-    return filterByProperty(roomsFilter, item.offer, 'rooms');
+    return roomsFilter.value === 'any' ? true : roomsFilter.value === item.offer['rooms'].toString();
   };
 
   var filterByGuests = function (item) {
-    return filterByProperty(guestsFilter, item.offer, 'guests');
+    return guestsFilter.value === 'any' ? true : guestsFilter.value === item.offer['guests'].toString();
   };
 
   var filterByFeatures = function (item) {
@@ -58,12 +53,15 @@
   };
 
   var onFilterChange = window.util.debounce(function () {
-    filteredData = data
-      .filter(filterByType)
-      .filter(filterByPrice)
-      .filter(filterByRooms)
-      .filter(filterByGuests)
-      .filter(filterByFeatures);
+    var filteredData = [];
+
+    for (var i = 0; i < data.length; i++) {
+      if (filteredData.length === 5) {
+        break;
+      } else if (filterByPrice(data[i]) && filterByType(data[i]) && filterByRooms(data[i]) && filterByGuests(data[i]) && filterByFeatures(data[i])) {
+        filteredData.push(data[i]);
+      }
+    }
     window.map.removePopup();
     window.map.removePins();
     window.map.updateOffers(filteredData);

@@ -4,6 +4,12 @@
   var MIN_TITLE_LENGTH = 30;
   var MAX_TITLE_LENGTH = 100;
   var INVALID_FIELD_BORDER = '2px solid red';
+  var MinPrice = {
+    BUNGALO: 0,
+    FLAT: 1000,
+    HOUSE: 5000,
+    PALACE: 10000
+  };
   var RoomsCapacity = {
     1: [1],
     2: [1, 2],
@@ -33,16 +39,16 @@
 
     switch (adType.value) {
       case 'bungalo':
-        minCost = 0;
+        minCost = MinPrice.BUNGALO;
         break;
       case 'flat':
-        minCost = 1000;
+        minCost = MinPrice.FLAT;
         break;
       case 'house':
-        minCost = 5000;
+        minCost = MinPrice.HOUSE;
         break;
       case 'palace':
-        minCost = 10000;
+        minCost = MinPrice.PALACE;
         break;
     }
 
